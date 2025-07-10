@@ -10,10 +10,12 @@ import java.util.ArrayList;
 // still possible to stick to the single Category, no problem.
 public class Category {
     private ArrayList<Flashcard> flashcards; // list of Flashcards
-
+    private Integer id;
+    private String name;
     // Constructors
-    public Category(ArrayList<Flashcard> flashcard) {
+    public Category(ArrayList<Flashcard> flashcard, String name) {
         this.flashcards = flashcard;
+        this.name = name;
     }
     public Category() {
         this.flashcards = new ArrayList<>();
@@ -23,7 +25,19 @@ public class Category {
     public ArrayList<Flashcard> getFlashcards() {
         return flashcards;
     }
+    public Integer getId() {
+        return id;
+    }
+    public String getName() {
+        return name;
+    }
     public void setFlashcards(ArrayList<Flashcard> flashcard) {
         this.flashcards = flashcard;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 }

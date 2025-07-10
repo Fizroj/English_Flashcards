@@ -78,7 +78,7 @@ public class DatabaseManager {
                 + "flashcard_id INTEGER NOT NULL,"
                 + "category_id INTEGER NOT NULL,"
                 + "PRIMARY KEY (flashcard_id, category_id),"
-                + "FOREIGN KEY (flashcard_id) REFERENCES flashcards(id) ON DELETE CASCADE,"
+                + "FOREIGN KEY (flashcard_id) REFERENCES phrases(id) ON DELETE CASCADE,"
                 + "FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE"
                 + ");";
 
@@ -269,15 +269,42 @@ public class DatabaseManager {
         }
     }
 
+    public static void addCategory(Category category) throws IllegalArgumentException {
+        if(category.getName() == null) {
+            throw new IllegalArgumentException("Cannot add null name category");
+        }
+
+        try(
+                Connection conn = DriverManager.getConnection(master_url);
+                PreparedStatement categoryPstmt = conn.prepareStatement("INSERT INTO categories (category) VALUES (?)");
+                ){
+            categoryPstmt.setString(1, category.getName());
+            categoryPstmt.executeUpdate();
+            ResultSet categoryRS = categoryPstmt.getGeneratedKeys();
+            if(categoryRS.next()) {
+                category.setId(categoryRS.getInt(1));
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+    public static void addFlashcardtoCategory(Flashcard flashcard, Category category) throws IllegalArgumentException {
+        if(flashcard.getPhrase() == null || flashcard.getTranslations() == null) {
+            throw new IllegalArgumentException("Cannot add flashcard to empty flashcard");
+        }
+
+        String sqlLinkFlashcardToCategory = "INSERT INTO flashcard_category (flashcard_id, category";
+    }
 
     public static void main(String[] args) {
         // start with the databases' initialization
         connect();
+        //everything down here is just for testing
         ArrayList<String> array = new ArrayList<String>();
         array.add("test1");
         array.add("test2");
         array.add("testHEHEHEHA");
-        Flashcard f = new Flashcard("tett???idk", array);
+        Flashcard f = new Flashcard("tett???idk", array, new ArrayList<>());
         DatabaseManager.addSingleFlashcard(f);
         Flashcard flashcard = DatabaseManager.querySingleFlashcard(1);
         System.out.println(flashcard.getId());
