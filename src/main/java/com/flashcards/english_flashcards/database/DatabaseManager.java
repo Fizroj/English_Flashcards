@@ -4,7 +4,10 @@ import org.sqlite.SQLiteException;
 import com.flashcards.english_flashcards.model.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
+
 // This class is everything regarding the database of this project (at least I hope lmao).
 // Whether it's creating the database, tables inside it, inserts, deletes edits or updating,
 // this entire class should be able to handle all of it
@@ -13,10 +16,10 @@ public class DatabaseManager {
     // the route to the master database.
 
     // this method is for randomizing an integer from a given range excluding the table of integers
-    // provided in the next argument
+    // provided in the last argument.
     // start and end work like in the nextInt: "start" includes the number in the set,
     // but "end" does not.
-    public static int talbeForRandom(int start, int end, ArrayList<Integer> excludes) throws IllegalArgumentException{
+    public static int randomExcludingTheTable(int start, int end, Set<Integer> excludes) throws IllegalArgumentException{
         // (quick vibe check)
         if(start>end){
             // we don't need to check for the "excludes" list, because even if we did, the mainList
@@ -47,7 +50,7 @@ public class DatabaseManager {
 
     // this method handles opening (or creating if nonexistent) database with all the
     // necessary tables, which store phrases, translations (together forming Flashcards) and other tables
-    // that maintain proper connections between the tables.
+    // that maintain proper connections between the tables and preserve overall functionality.
     public static void connect() {
 
         // phrases table
@@ -202,18 +205,29 @@ public class DatabaseManager {
     // the same drill as querySingleFlashcard, but now it's random member
     public static Flashcard queryRandomFlashcard() {
         Flashcard flashcard = new Flashcard();
-        Random random = new Random();
+        HashSet<Integer> deletedIdsTable = new HashSet<>();
         int randomID = 0;
         try(
+                // I'm using regular statements instead of prepared ones because I first randomize id, and after that
+                // i randomize it, I can just insert that id into the statement, without preparing it beforehand
                 Connection conn = DriverManager.getConnection(master_url);
                 Statement countStmt = conn.createStatement();
                 Statement phraseStmt = conn.createStatement();
                 Statement translationStmt = conn.createStatement();
-
+                Statement deletedFlashcardPstmt = conn.createStatement();
         ){
             ResultSet countRS = countStmt.executeQuery("SELECT COUNT(*) FROM phrases");
+            ResultSet deletedRS = deletedFlashcardPstmt.executeQuery("SELECT * FROM deleted_ids");
+            if(deletedRS.next()){
+                for(int i=0; i<countRS.getInt(1); i++){
+                    deletedIdsTable.add(deletedRS.getInt(1));
+                }
+            }
+
+            // this line is the reason why randomExcludingTHeTable exists - so we don't have to rely on RNG to
+            // randomize a new id if the randomized one got deleted before
             if(countRS.next()){
-                randomID = random.nextInt(countRS.getInt(1))+1;
+                randomID = randomExcludingTheTable(1, countRS.getInt(1), deletedIdsTable);
             }
             ResultSet phraseRS = phraseStmt.executeQuery("SELECT * FROM phrases WHERE id = " + randomID);
             ResultSet translationRS = translationStmt.executeQuery("SELECT * FROM translations WHERE phrase_id = " + randomID);
@@ -232,8 +246,8 @@ public class DatabaseManager {
     }
 
     // this method is for deleting a flashcard based on its "id" field. No flashcard takes a deleted one's
-    // place in the database, that's why tableForRandom makes sense in this project - to make sure you're
-    // not randomizing from an empty record
+    // place in the database, that's why randomExcludingTheTable makes sense in this project - to make sure you
+    // don't randomize from an empty record
     public static void deleteSingleFlashcard(Flashcard flashcard) throws IllegalArgumentException {
         if(flashcard.getPhrase() == null || flashcard.getTranslations() == null) {
             throw new IllegalArgumentException("Cannot delete empty flashcard");
@@ -257,14 +271,13 @@ public class DatabaseManager {
 
 
     public static void main(String[] args) {
-        // work in progress:
-        // queryRandomFlashcard - make it delete-flashcard proof
+        // start with the databases' initialization
         connect();
         ArrayList<String> array = new ArrayList<String>();
-        array.add("te?234567e?!");
-        array.add("tes2234567e?!");
-        array.add("test234567e/!");
-        Flashcard f = new Flashcard("tett?", array);
+        array.add("test1");
+        array.add("test2");
+        array.add("testHEHEHEHA");
+        Flashcard f = new Flashcard("tett???idk", array);
         DatabaseManager.addSingleFlashcard(f);
         Flashcard flashcard = DatabaseManager.querySingleFlashcard(1);
         System.out.println(flashcard.getId());
