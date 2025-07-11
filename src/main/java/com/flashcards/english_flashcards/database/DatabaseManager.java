@@ -2,6 +2,8 @@ package com.flashcards.english_flashcards.database;
 
 import org.sqlite.SQLiteException;
 import com.flashcards.english_flashcards.model.*;
+
+import java.io.PipedReader;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -209,7 +211,7 @@ public class DatabaseManager {
         int randomID = 0;
         try(
                 // I'm using regular statements instead of prepared ones because I first randomize id, and after that
-                // i randomize it, I can just insert that id into the statement, without preparing it beforehand
+                // I randomize it, so I can just insert that id into the statement, without preparing it beforehand
                 Connection conn = DriverManager.getConnection(master_url);
                 Statement countStmt = conn.createStatement();
                 Statement phraseStmt = conn.createStatement();
@@ -255,20 +257,28 @@ public class DatabaseManager {
         try(
                 Connection conn = DriverManager.getConnection(master_url);
                 PreparedStatement phrasePstmt = conn.prepareStatement("DELETE FROM phrases WHERE id = ?");
-                PreparedStatement translationPstmt = conn.prepareStatement("DELETE FROM translations WHERE phrase_id = ?");
+                // vvv not necessary, because of ON DELETE CASCADE vvv
+                // PreparedStatement translationPstmt = conn.prepareStatement("DELETE FROM translations WHERE phrase_id = ?");
                 PreparedStatement deletedFlashcardPsmt = conn.prepareStatement("INSERT INTO deleted_ids (deleted_id) VALUES (?)")
                 ){
             phrasePstmt.setInt(1, flashcard.getId());
-            translationPstmt.setInt(1, flashcard.getId());
+            //translationPstmt.setInt(1, flashcard.getId());
             deletedFlashcardPsmt.setInt(1, flashcard.getId());
-            phrasePstmt.executeUpdate();
-            translationPstmt.executeUpdate();
+
+            // this line is to check if the method actually deleted anything from the database, just to be sure
+            int phraseChanges = phrasePstmt.executeUpdate();
+            if(phraseChanges == 0) {
+                System.out.println("No phrases were deleted...");
+            }
+
+            //translationPstmt.executeUpdate();
             deletedFlashcardPsmt.executeUpdate();
         } catch (SQLException e){
             System.err.println(e.getMessage());
         }
     }
 
+    // self-explanatory, just adds new category to the database
     public static void addCategory(Category category) throws IllegalArgumentException {
         if(category.getName() == null) {
             throw new IllegalArgumentException("Cannot add null name category");
@@ -276,7 +286,7 @@ public class DatabaseManager {
 
         try(
                 Connection conn = DriverManager.getConnection(master_url);
-                PreparedStatement categoryPstmt = conn.prepareStatement("INSERT INTO categories (category) VALUES (?)");
+                PreparedStatement categoryPstmt = conn.prepareStatement("INSERT INTO categories (name) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
                 ){
             categoryPstmt.setString(1, category.getName());
             categoryPstmt.executeUpdate();
@@ -288,40 +298,82 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
-    public static void addFlashcardtoCategory(Flashcard flashcard, Category category) throws IllegalArgumentException {
-        if(flashcard.getPhrase() == null || flashcard.getTranslations() == null) {
-            throw new IllegalArgumentException("Cannot add flashcard to empty flashcard");
+
+    // self-explanatory, just removes a category from the database
+    public static void deleteCategory(Category category){
+        if(category.getId() == null) {
+            throw new IllegalArgumentException("Cannot delete null name category");
         }
 
-        String sqlLinkFlashcardToCategory = "INSERT INTO flashcard_category (flashcard_id, category";
+        try(
+                Connection conn = DriverManager.getConnection(master_url);
+                PreparedStatement categoryPstmt = conn.prepareStatement("DELETE FROM categories where id = ?");
+        ){
+            categoryPstmt.setInt(1, category.getId());
+
+            // this line here is for checking that the method actually deleted something from
+            // the database
+            int changes = categoryPstmt.executeUpdate();
+            if(changes == 0) {
+                System.out.println("No categories were deleted...");
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    // this method saves into the database connections between flashcards and categories.
+    // that's because single flashcard can be in multiple categories and we need to store in which ones each
+    // flashcard is
+    public static void addFlashcardToCategory(Flashcard flashcard, Category category) throws IllegalArgumentException {
+        if(flashcard.getPhrase() == null || flashcard.getTranslations() == null || flashcard.getId() == null) {
+            throw new IllegalArgumentException("Cannot add null flashcard to category");
+        }
+        if(category.getId() == null || category.getName() == null) {
+            throw new IllegalArgumentException("Cannot add flashcard to null category");
+        }
+
+        String sqlLinkFlashcardToCategory = "INSERT INTO flashcard_category (flashcard_id, category_id) VALUES (?,?)";
+
+        try(
+                Connection conn = DriverManager.getConnection(master_url);
+                PreparedStatement linkPstmt = conn.prepareStatement(sqlLinkFlashcardToCategory);
+                ){
+            linkPstmt.setInt(1, flashcard.getId());
+            linkPstmt.setInt(2, category.getId());
+            linkPstmt.executeUpdate();
+            // after adding a link to the database, it's useful to add flashcard logically
+            // to the category in the code as well
+            category.addFlashcardToCategory(flashcard);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
         // start with the databases' initialization
         connect();
         //everything down here is just for testing
-        ArrayList<String> array = new ArrayList<String>();
+        ArrayList<String> array = new ArrayList<>();
         array.add("test1");
         array.add("test2");
         array.add("testHEHEHEHA");
-        Flashcard f = new Flashcard("tett???idk", array, new ArrayList<>());
+        Flashcard f = new Flashcard("testAAAAAAAAAAAAAAAAAAA", array, new ArrayList<>());
         DatabaseManager.addSingleFlashcard(f);
         Flashcard flashcard = DatabaseManager.querySingleFlashcard(1);
-        System.out.println(flashcard.getId());
-        System.out.println(flashcard.getPhrase());
-        System.out.println(flashcard.getTranslations());
+        flashcard.printFlashcard();
         Flashcard flashcard2 = DatabaseManager.queryRandomFlashcard();
-        System.out.println(flashcard2.getId());
-        System.out.println(flashcard2.getPhrase());
-        System.out.println(flashcard2.getTranslations());
+        flashcard2.printFlashcard();
         try{
             DatabaseManager.deleteSingleFlashcard(flashcard);
         } catch (IllegalArgumentException e){
             System.err.println(e.getMessage());
         }
         Flashcard flashcard3 = DatabaseManager.querySingleFlashcard("tet");
-        System.out.println(flashcard3.getId());
-        System.out.println(flashcard3.getPhrase());
-        System.out.println(flashcard3.getTranslations());
+        flashcard3.printFlashcard();
+
+        Category category = new Category("CAT_TESTTTTT3");
+        DatabaseManager.addCategory(category);
+        DatabaseManager.addFlashcardToCategory(flashcard3, category);
     }
 }

@@ -6,10 +6,10 @@ import java.util.ArrayList;
 // language, that you can train your English vocabulary on. It's intended to be for native-to-English
 // vocabulary training, but honestly it could be any-to-any language...
 public class Flashcard {
-    private Integer id; //field for database purposes only
+    private Integer id; // field for database purposes only
     private String phrase; // description of the word in your native language
     private ArrayList<String> translations; // table of possible translations to THAT phrase
-    private ArrayList<String> categories;
+    private ArrayList<String> categories; // it's for storing which categories does the flashcard belong to
 
     // Constructors
     public Flashcard(String phrase, ArrayList<String> translations, ArrayList<String> categories) {
@@ -47,5 +47,13 @@ public class Flashcard {
     }
     public void setCategories(ArrayList<String> categories) {
         this.categories = categories;
+    }
+
+    // for debugging, and in the future for something else maybe
+    public void printFlashcard(){
+        System.out.println("id: " + id);
+        System.out.println("phrase: " + phrase);
+        System.out.println("translations: " + translations);
+        System.out.println("categories: " + categories);
     }
 }

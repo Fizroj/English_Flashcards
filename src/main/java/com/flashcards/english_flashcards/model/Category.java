@@ -10,18 +10,23 @@ import java.util.ArrayList;
 // still possible to stick to the single Category, no problem.
 public class Category {
     private ArrayList<Flashcard> flashcards; // list of Flashcards
-    private Integer id;
-    private String name;
+    private Integer id; // field for database purposes
+    private String name; // name of the category
+
     // Constructors
     public Category(ArrayList<Flashcard> flashcard, String name) {
         this.flashcards = flashcard;
+        this.name = name;
+    }
+    public Category(String name) {
+        this.flashcards = new ArrayList<>();
         this.name = name;
     }
     public Category() {
         this.flashcards = new ArrayList<>();
     }
 
-    // Getter and Setter
+    // Getters and Setters
     public ArrayList<Flashcard> getFlashcards() {
         return flashcards;
     }
@@ -39,5 +44,20 @@ public class Category {
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+    // for debugging, and in the future for something else maybe
+    public void printCategory(){
+        System.out.println("id: " + id);
+        System.out.println("name: " + name);
+        System.out.println("flashcards: " + flashcards);
+    }
+    // add a new flashcard to the category
+    public void addFlashcardToCategory(Flashcard flashcard){
+        this.flashcards.add(flashcard);
+    }
+    // delete selected flashcard from the category
+    public void removeFlashcardFromCategory(Flashcard flashcard){
+        flashcards.remove(flashcard);
     }
 }
