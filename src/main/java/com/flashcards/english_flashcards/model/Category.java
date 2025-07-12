@@ -9,7 +9,8 @@ import java.util.ArrayList;
 // If one does not like multiple Categories and wants to learn everything at once, then it's
 // still possible to stick to the single Category, no problem.
 public class Category {
-    private ArrayList<Flashcard> flashcards; // list of Flashcards
+    private ArrayList<Flashcard> flashcards; // list of Flashcards (not all of them are stored here,
+    // because database is for that, here you store only some flashcards
     private Integer id; // field for database purposes
     private String name; // name of the category
 
@@ -59,5 +60,12 @@ public class Category {
     // delete selected flashcard from the category
     public void removeFlashcardFromCategory(Flashcard flashcard){
         flashcards.remove(flashcard);
+    }
+    // for debugging, prints out all of the flashcards present in this category
+    public void printFlashcardsOfACategory(){
+        for(Flashcard flashcard : flashcards){
+            flashcard.printFlashcard();
+            System.out.println("///");
+        }
     }
 }

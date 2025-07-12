@@ -9,10 +9,10 @@ public class Flashcard {
     private Integer id; // field for database purposes only
     private String phrase; // description of the word in your native language
     private ArrayList<String> translations; // table of possible translations to THAT phrase
-    private ArrayList<String> categories; // it's for storing which categories does the flashcard belong to
+    private ArrayList<Integer> categories; // it's for storing id's of which categories the flashcard belongs to
 
     // Constructors
-    public Flashcard(String phrase, ArrayList<String> translations, ArrayList<String> categories) {
+    public Flashcard(String phrase, ArrayList<String> translations, ArrayList<Integer> categories) {
         this.phrase = phrase;
         this.translations = translations;
         this.categories = categories;
@@ -33,7 +33,7 @@ public class Flashcard {
     public Integer getId() {
         return id;
     }
-    public ArrayList<String> getCategories() {
+    public ArrayList<Integer> getCategories() {
         return categories;
     }
     public void setPhrase(String phrase) {
@@ -45,7 +45,7 @@ public class Flashcard {
     public void setId(Integer id) {
         this.id = id;
     }
-    public void setCategories(ArrayList<String> categories) {
+    public void setCategories(ArrayList<Integer> categories) {
         this.categories = categories;
     }
 
@@ -55,5 +55,12 @@ public class Flashcard {
         System.out.println("phrase: " + phrase);
         System.out.println("translations: " + translations);
         System.out.println("categories: " + categories);
+    }
+    // adds one category to the flashcard table
+    public void addCategoryToFlashcard(Integer category){
+        this.categories.add(category);
+    }
+    public void addTranslation(String translation){
+        this.translations.add(translation);
     }
 }

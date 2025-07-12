@@ -152,18 +152,28 @@ public class DatabaseManager {
         Flashcard flashcard = new Flashcard();
         try(
                 Connection conn = DriverManager.getConnection(master_url);
-                Statement phraseStmt = conn.createStatement();
-                Statement translationStmt = conn.createStatement();
-                ResultSet phraseRS = phraseStmt.executeQuery("SELECT * FROM phrases WHERE id = " + id);
-                ResultSet translationRS = translationStmt.executeQuery("SELECT * FROM translations WHERE phrase_id = " + id);
+                PreparedStatement phrasePstmt = conn.prepareStatement("SELECT * FROM phrases WHERE id = ?");
+                PreparedStatement translationPstmt = conn.prepareStatement("SELECT * FROM translations WHERE phrase_id = ?");
+                PreparedStatement whichCategoryPstmt = conn.prepareStatement("SELECT * FROM flashcard_category WHERE flashcard_id = ?");
+
         ){
+            phrasePstmt.setInt(1, id);
+            translationPstmt.setInt(1, id);
+            whichCategoryPstmt.setInt(1, id);
+            ResultSet phraseRS = phrasePstmt.executeQuery();
+            ResultSet translationRS = translationPstmt.executeQuery();
+            ResultSet whichCategoryRS = whichCategoryPstmt.executeQuery();
             if(phraseRS.next()) {
                 flashcard.setPhrase(phraseRS.getString("phrase"));
                 flashcard.setId(phraseRS.getInt("id"));
             }
             while(translationRS.next()) {
-                flashcard.getTranslations().add(translationRS.getString("translation"));
+                flashcard.addTranslation(translationRS.getString("translation"));
             }
+            while(whichCategoryRS.next()) {
+                flashcard.addCategoryToFlashcard(whichCategoryRS.getInt("category_id"));
+            }
+            System.out.println(flashcard.getCategories());
         } catch (SQLException e){
             System.err.println(e.getMessage());
         }
@@ -299,6 +309,54 @@ public class DatabaseManager {
         }
     }
 
+    // also self-explanatory, just selects the category from the database by id
+    public static Category queryCategory(int id) throws IllegalArgumentException {
+        if(id <= 0){
+            throw new IllegalArgumentException("Cannot query category with id " + id);
+        }
+        Category outCategory = new Category();
+
+        try(
+                Connection conn = DriverManager.getConnection(master_url);
+                PreparedStatement categoryPstmt = conn.prepareStatement("SELECT * FROM categories where id = ?");
+                ){
+            categoryPstmt.setInt(1, id);
+            ResultSet categoryRS = categoryPstmt.executeQuery();
+            if(categoryRS.next()) {
+                outCategory.setName(categoryRS.getString("name"));
+                outCategory.setId(categoryRS.getInt("id"));
+            }
+        } catch (SQLException e){
+            System.err.println(e.getMessage());
+        }
+
+        return outCategory;
+    }
+
+    // the same as above, but it's by the name String
+    public static Category queryCategory(String name) throws IllegalArgumentException {
+        if(name == null){
+            throw new IllegalArgumentException("Cannot query category with empty name category");
+        }
+        Category outCategory = new Category();
+
+        try(
+                Connection conn = DriverManager.getConnection(master_url);
+                PreparedStatement categoryPstmt = conn.prepareStatement("SELECT * FROM categories where name = ?");
+        ){
+            categoryPstmt.setString(1, name);
+            ResultSet categoryRS = categoryPstmt.executeQuery();
+            if(categoryRS.next()) {
+                outCategory.setName(categoryRS.getString("name"));
+                outCategory.setId(categoryRS.getInt("id"));
+            }
+        } catch (SQLException e){
+            System.err.println(e.getMessage());
+        }
+
+        return outCategory;
+    }
+
     // self-explanatory, just removes a category from the database
     public static void deleteCategory(Category category){
         if(category.getId() == null) {
@@ -316,6 +374,38 @@ public class DatabaseManager {
             int changes = categoryPstmt.executeUpdate();
             if(changes == 0) {
                 System.out.println("No categories were deleted...");
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    // this is a method that takes all flashcards associated with a provided category (it's stored in the
+    // database) and then fills this.category.flashcards with it
+    public static void fillCategoryWithFlashcards(Category category) throws IllegalArgumentException {
+        if(category.getName() == null || category.getId() == null) {
+            throw new IllegalArgumentException("Cannot fill a null category");
+        }
+
+        ArrayList<Integer> flashcard_ids = new ArrayList<>(); // for storing id's from flashcard_category
+        try(
+                Connection conn = DriverManager.getConnection(master_url);
+                PreparedStatement categoryPstmt = conn.prepareStatement("SELECT * FROM flashcard_category WHERE category_id = ?");
+                // Future idea: maybe improve the method by including more complex but effective queries
+                //PreparedStatement flashcardsPstmt = conn.prepareStatement("SELECT phrases.id, phrases.phrase, translations.translation"
+                //                                                            + "FROM phrases"
+                //                                                            + "JOIN translations ON phrases.id = translations.phrase_id");
+                ){
+            // add selected id's to the inner ArrayList
+            categoryPstmt.setInt(1, category.getId());
+            ResultSet categoryRS = categoryPstmt.executeQuery();
+            while(categoryRS.next()) {
+                flashcard_ids.add(categoryRS.getInt("flashcard_id"));
+            }
+            System.out.println(flashcard_ids);
+            // assign all of the flashcards with id's from flashcard_ids to the category
+            for(int i=0; i<flashcard_ids.size(); i++) {
+                category.addFlashcardToCategory(DatabaseManager.querySingleFlashcard(flashcard_ids.get(i)));
             }
         } catch (SQLException e){
             e.printStackTrace();
@@ -345,6 +435,7 @@ public class DatabaseManager {
             // after adding a link to the database, it's useful to add flashcard logically
             // to the category in the code as well
             category.addFlashcardToCategory(flashcard);
+            flashcard.addCategoryToFlashcard(category.getId());
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -354,7 +445,7 @@ public class DatabaseManager {
         // start with the databases' initialization
         connect();
         //everything down here is just for testing
-        ArrayList<String> array = new ArrayList<>();
+        /*ArrayList<String> array = new ArrayList<>();
         array.add("test1");
         array.add("test2");
         array.add("testHEHEHEHA");
@@ -374,6 +465,14 @@ public class DatabaseManager {
 
         Category category = new Category("CAT_TESTTTTT3");
         DatabaseManager.addCategory(category);
-        DatabaseManager.addFlashcardToCategory(flashcard3, category);
+        DatabaseManager.addFlashcardToCategory(flashcard3, category);*/
+        Category category2 = queryCategory("CAT_TESTTTTT");
+        Flashcard flashcard3 = DatabaseManager.querySingleFlashcard(2);
+        flashcard3.printFlashcard();
+        //DatabaseManager.addFlashcardToCategory(flashcard3, category2);
+        DatabaseManager.fillCategoryWithFlashcards(category2);
+        category2.printCategory();
+        category2.printFlashcardsOfACategory();
+
     }
 }
