@@ -167,13 +167,15 @@ public class DatabaseManager {
                 flashcard.setPhrase(phraseRS.getString("phrase"));
                 flashcard.setId(phraseRS.getInt("id"));
             }
+            if(flashcard.getId() == null){
+                throw new NullPointerException("Cannot find flashcard with id " + id);
+            }
             while(translationRS.next()) {
                 flashcard.addTranslation(translationRS.getString("translation"));
             }
             while(whichCategoryRS.next()) {
                 flashcard.addCategoryToFlashcard(whichCategoryRS.getInt("category_id"));
             }
-            System.out.println(flashcard.getCategories());
         } catch (SQLException e){
             System.err.println(e.getMessage());
         }
@@ -188,6 +190,7 @@ public class DatabaseManager {
                 Connection conn = DriverManager.getConnection(master_url);
                 PreparedStatement phrasePstmt = conn.prepareStatement("SELECT * FROM phrases WHERE phrase = ?");
                 PreparedStatement translationPstmt = conn.prepareStatement("SELECT * FROM translations WHERE phrase_id = ?");
+                PreparedStatement whichCategoryPstmt = conn.prepareStatement("SELECT * FROM flashcard_category WHERE flashcard_id = ?");
         ){
             phrasePstmt.setString(1, phrase);
             ResultSet phraseRS = phrasePstmt.executeQuery();
@@ -200,10 +203,14 @@ public class DatabaseManager {
                 throw new NullPointerException("Cannot find flashcard with string " + phrase);
             }
             translationPstmt.setInt(1, flashcard.getId());
+            whichCategoryPstmt.setInt(1, flashcard.getId());
             ResultSet translationRS = translationPstmt.executeQuery();
-
+            ResultSet whichCategoryRS = whichCategoryPstmt.executeQuery();
             while(translationRS.next()) {
                 flashcard.getTranslations().add(translationRS.getString("translation"));
+            }
+            while(whichCategoryRS.next()) {
+                flashcard.addCategoryToFlashcard(whichCategoryRS.getInt("category_id"));
             }
         } catch (SQLException e){
             System.err.println(e.getMessage());
@@ -217,7 +224,8 @@ public class DatabaseManager {
     // the same drill as querySingleFlashcard, but now it's random member
     public static Flashcard queryRandomFlashcard() {
         Flashcard flashcard = new Flashcard();
-        HashSet<Integer> deletedIdsTable = new HashSet<>();
+        HashSet<Integer> deletedIdsTable = new HashSet<>(); // we only care if id is here, not which place, and HashSet
+        // is quicker at this
         int randomID = 0;
         try(
                 // I'm using regular statements instead of prepared ones because I first randomize id, and after that
@@ -402,7 +410,6 @@ public class DatabaseManager {
             while(categoryRS.next()) {
                 flashcard_ids.add(categoryRS.getInt("flashcard_id"));
             }
-            System.out.println(flashcard_ids);
             // assign all of the flashcards with id's from flashcard_ids to the category
             for(int i=0; i<flashcard_ids.size(); i++) {
                 category.addFlashcardToCategory(DatabaseManager.querySingleFlashcard(flashcard_ids.get(i)));
@@ -441,6 +448,28 @@ public class DatabaseManager {
         }
     }
 
+    public static void deleteFlashcardFromCategory(Flashcard flashcard, Category category) throws IllegalArgumentException {
+        if(flashcard.getId() == null || category.getId() == null) {
+            throw new IllegalArgumentException("Cannot delete (null) flashcard from (null) category");
+        }
+
+        String sqlDeleteLinkFlashcardFromCategory = "DELETE FROM flashcard_category WHERE category_id = ? AND flashcard_id = ?";
+
+        try(
+                Connection conn = DriverManager.getConnection(master_url);
+                PreparedStatement deleteLinkPstmt = conn.prepareStatement(sqlDeleteLinkFlashcardFromCategory);
+                ){
+            deleteLinkPstmt.setInt(1, category.getId());
+            deleteLinkPstmt.setInt(2, flashcard.getId());
+            int changes = deleteLinkPstmt.executeUpdate();
+            if(changes == 0){
+                System.out.println("No links between flashcards and categories were deleted...");
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         // start with the databases' initialization
         connect();
@@ -466,7 +495,7 @@ public class DatabaseManager {
         Category category = new Category("CAT_TESTTTTT3");
         DatabaseManager.addCategory(category);
         DatabaseManager.addFlashcardToCategory(flashcard3, category);*/
-        Category category2 = queryCategory("CAT_TESTTTTT");
+        Category category2 = queryCategory("CAT_TESTTTTT2");
         Flashcard flashcard3 = DatabaseManager.querySingleFlashcard(2);
         flashcard3.printFlashcard();
         //DatabaseManager.addFlashcardToCategory(flashcard3, category2);
