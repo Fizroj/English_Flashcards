@@ -1,7 +1,7 @@
-package com.flashcards.english_flashcards.database;
+package com.flashcards.english_flashcards.Database;
 
-import com.flashcards.english_flashcards.model.Category;
-import com.flashcards.english_flashcards.model.Flashcard;
+import com.flashcards.english_flashcards.Model.Category;
+import com.flashcards.english_flashcards.Model.Flashcard;
 
 import java.sql.*;
 import java.util.HashSet;

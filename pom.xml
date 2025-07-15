@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.flashcards.english_flashcards/com.flashcards.english_flashcards.HelloApplication
+                                com.com.english_flashcards/english_flashcards.App.Application
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

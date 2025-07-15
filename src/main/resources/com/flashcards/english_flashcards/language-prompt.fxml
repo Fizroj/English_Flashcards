@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.flashcards.english_flashcards.Controllers.LanguagePromptController">
+   <top>
+      <Label text="Choose the language / Wybierz język" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets top="50.0" />
+         </BorderPane.margin>
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Label>
+   </top>
+   <center>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="englishButton" mnemonicParsing="false" onAction="#onEnglishButton" text="English">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+            </Button>
+            <Button fx:id="polishButton" mnemonicParsing="false" onAction="#onPolishButton" text="Polski">
+               <font>
+                  <Font name="System Bold" size="25.0" />
+               </font>
+            </Button>
+         </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </HBox>
+   </center>
+</BorderPane>

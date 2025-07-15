@@ -1,11 +1,13 @@
-package com.flashcards.english_flashcards.database;
+package com.flashcards.english_flashcards.Database;
 
-import org.sqlite.SQLiteException;
-import com.flashcards.english_flashcards.model.*;
+import com.flashcards.english_flashcards.Model.Category;
+import com.flashcards.english_flashcards.Model.Flashcard;
+
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 

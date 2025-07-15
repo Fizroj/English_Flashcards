@@ -1,4 +1,4 @@
-package com.flashcards.english_flashcards.model;
+package com.flashcards.english_flashcards.Model;
 
 import java.util.ArrayList;
 
