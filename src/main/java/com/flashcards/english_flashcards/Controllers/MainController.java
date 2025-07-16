@@ -18,11 +18,10 @@ public class MainController {
     private Label welcomeTitle;
 
     private Stage mainStage;
-    public void setMainStage(Stage mainStage) {
+    public void setPrimaryStage(Stage mainStage) {
         this.mainStage = mainStage;
     }
     public void initialize(){
-        LanguageManager.setLocale(Locale.US);
         LanguageManager.readLanguage();
         // it's for setting language of UI
         welcomeTitle.setText(LanguageManager.getBundle().getString("welcomeTitle"));

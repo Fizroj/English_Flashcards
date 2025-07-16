@@ -1,5 +1,6 @@
 package com.flashcards.english_flashcards.Language;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
@@ -20,7 +21,7 @@ public class LanguageManager {
     public static void readLanguage() {
         Properties properties = new Properties();
         try (
-                InputStream stream = LanguageManager.class.getClassLoader().getResourceAsStream("Resource_Bundle/config.properties");
+                FileInputStream stream = new FileInputStream("src/main/resources/com/flashcards/english_flashcards/Resource_Bundle/config.properties");
         ) {
             if(stream != null) {
                 properties.load(stream);

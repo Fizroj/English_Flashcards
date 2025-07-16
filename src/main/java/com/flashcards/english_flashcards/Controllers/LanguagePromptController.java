@@ -15,8 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-import static java.lang.System.out;
-
 // A controller meant to appear only once. It's for language setup of the app, on later
 // launches Main Controller takes over first
 public class LanguagePromptController {
@@ -46,16 +44,22 @@ public class LanguagePromptController {
         LanguageManager.setLanguage(new Locale.Builder().setLanguage("en").build());
 
         Properties properties = new Properties();
-        properties.load(new FileInputStream("resources/com/flashcards/english_flashcards/config.properties"));
+        properties.load(new FileInputStream("src/main/resources/com/flashcards/english_flashcards/Resource_Bundle/config.properties"));
         properties.setProperty("language", "en");
-        properties.store(out,null);
+        try(
+                FileOutputStream fileOutputStream = new FileOutputStream("src/main/resources/com/flashcards/english_flashcards/Resource_Bundle/config.properties");
+                ){
+            properties.store(fileOutputStream, null);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/english_flashcards/main-view.fxml"));
         Parent root = fxmlLoader.load();
         Stage stage = new Stage();
         MainController mainController = fxmlLoader.getController();
         setMainController(mainController);
-        mainController.setMainStage(stage);
+        mainController.setPrimaryStage(stage);
         stage.setTitle(LanguageManager.getBundle().getString("windowTitle"));
         stage.setScene(new Scene(root));
         stage.show();
@@ -67,16 +71,22 @@ public class LanguagePromptController {
         LanguageManager.setLanguage(new Locale.Builder().setLanguage("pl").build());
 
         Properties properties = new Properties();
-        properties.load(new FileInputStream("resources/com/flashcards/english_flashcards/config.properties"));
+        properties.load(new FileInputStream("src/main/resources/com/flashcards/english_flashcards/Resource_Bundle/config.properties"));
         properties.setProperty("language", "pl");
-        properties.store(out,null);
+        try(
+                FileOutputStream fileOutputStream = new FileOutputStream("src/main/resources/com/flashcards/english_flashcards/Resource_Bundle/config.properties");
+        ){
+            properties.store(fileOutputStream, null);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
 
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/english_flashcards/main-view.fxml"));
         Parent root = fxmlLoader.load();
         Stage stage = new Stage();
         MainController mainController = fxmlLoader.getController();
         setMainController(mainController);
-        mainController.setMainStage(stage);
+        mainController.setPrimaryStage(stage);
         stage.setTitle(LanguageManager.getBundle().getString("windowTitle"));
         stage.setScene(new Scene(root));
         stage.show();
