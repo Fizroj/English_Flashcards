@@ -4,6 +4,7 @@ import java.util.ResourceBundle;
 import java.util.Locale;
 
 import com.flashcards.english_flashcards.App.Application;
+import com.flashcards.english_flashcards.Language.LanguageManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -20,8 +21,10 @@ public class MainController {
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
     }
-    public void initialize(Stage stage){
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/english_flashcards/main-view.fxml"));
-
+    public void initialize(){
+        LanguageManager.setLocale(Locale.US);
+        LanguageManager.readLanguage();
+        // it's for setting language of UI
+        welcomeTitle.setText(LanguageManager.getBundle().getString("welcomeTitle"));
     }
 }
