@@ -5,9 +5,9 @@ module com.flashcards.english_flashcards {
     requires org.xerial.sqlitejdbc;
     requires jdk.compiler;
 
-    opens com.flashcards.english_flashcards to javafx.fxml;
-    exports com.flashcards.english_flashcards.App;
-    opens com.flashcards.english_flashcards.App to javafx.fxml;
-    exports com.flashcards.english_flashcards.Controllers;
-    opens com.flashcards.english_flashcards.Controllers to javafx.fxml;
+    opens com.flashcards to javafx.fxml;
+    exports com.flashcards.App;
+    opens com.flashcards.App to javafx.fxml;
+    exports com.flashcards.Controllers;
+    opens com.flashcards.Controllers to javafx.fxml;
 }

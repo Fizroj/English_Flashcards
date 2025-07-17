@@ -1,7 +1,7 @@
-package com.flashcards.english_flashcards.Database;
+package com.flashcards.Database;
 
-import com.flashcards.english_flashcards.Model.Category;
-import com.flashcards.english_flashcards.Model.Flashcard;
+import com.flashcards.Model.Category;
+import com.flashcards.Model.Flashcard;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;

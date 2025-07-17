@@ -1,10 +1,12 @@
-package com.flashcards.english_flashcards.Database;
+package com.flashcards.Database;
 
-import com.flashcards.english_flashcards.Model.Category;
-import com.flashcards.english_flashcards.Model.Flashcard;
+import com.flashcards.Model.Category;
+import com.flashcards.Model.Flashcard;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class QueryManager extends DatabaseManager {
     public static Flashcard querySingleFlashcard(int id) {
@@ -184,5 +186,24 @@ public class QueryManager extends DatabaseManager {
         }
 
         return outCategory;
+    }
+    public static List<Category> queryCategories() {
+        List<Category> outCategories = new ArrayList<>();
+        try(
+                Connection conn = DriverManager.getConnection(master_url);
+                PreparedStatement categoriesPstmt = conn.prepareStatement("SELECT * FROM categories");
+                ){
+            ResultSet categoriesRS = categoriesPstmt.executeQuery();
+            while(categoriesRS.next()) {
+                Category tempCategory = new Category();
+                tempCategory.setName(categoriesRS.getString("name"));
+                tempCategory.setId(categoriesRS.getInt("id"));
+                outCategories.add(tempCategory);
+            }
+        } catch (SQLException e){
+            System.err.println(e.getMessage());
+        }
+
+        return outCategories;
     }
 }
