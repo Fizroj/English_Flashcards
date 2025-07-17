@@ -14,7 +14,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Properties;
 
 public class FirstCategoryController {
 
@@ -47,7 +46,7 @@ public class FirstCategoryController {
         InsertManager.addCategory(firstCategory);
         PropertiesManager.changeConfigProperty("currentCategory", firstCategoryName);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/main-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/main-view.fxml"));
         Parent root = fxmlLoader.load();
         Stage stage = new Stage();
         MainController mainController = fxmlLoader.getController();

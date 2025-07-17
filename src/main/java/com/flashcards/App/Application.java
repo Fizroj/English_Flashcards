@@ -1,18 +1,13 @@
 package com.flashcards.App;
 
-import com.flashcards.App.*;
 import com.flashcards.Controllers.*;
-import com.flashcards.Database.*;
 import com.flashcards.Language_and_Properties.*;
-import com.flashcards.Model.*;
-import javafx.beans.property.Property;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
 
 public class Application extends javafx.application.Application {
     @Override
@@ -21,14 +16,14 @@ public class Application extends javafx.application.Application {
         Scene scene;
         File dbFile = new File("databases/flashcards.db");
         if (!dbFile.exists()) {
-            fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/language-prompt.fxml"));
+            fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/First_Time_User_View/language-prompt.fxml"));
             scene = new Scene(fxmlLoader.load());
             LanguagePromptController languagePromptController = fxmlLoader.getController();
             languagePromptController.setPrimaryStage(stage);
             stage.setTitle("Language Selection");
         } else {
             LanguageManager.readLanguage();
-            fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/main-view.fxml"));
+            fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/main-view.fxml"));
             scene = new Scene(fxmlLoader.load());
             MainController mainController = fxmlLoader.getController();
             mainController.setPrimaryStage(stage);

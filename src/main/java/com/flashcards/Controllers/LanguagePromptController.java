@@ -1,14 +1,10 @@
 package com.flashcards.Controllers;
 
 import java.io.*;
-import java.util.Properties;
 import java.util.Locale;
 
 import com.flashcards.App.*;
-import com.flashcards.Controllers.*;
-import com.flashcards.Database.*;
 import com.flashcards.Language_and_Properties.*;
-import com.flashcards.Model.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -51,7 +47,7 @@ public class LanguagePromptController {
     }
 
     public void loadFirstCategoryScene() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/first-category-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/First_Time_User_View/first-category-view.fxml"));
         Parent root = fxmlLoader.load();
         FirstCategoryController firstCategoryController = fxmlLoader.getController();
         firstCategoryController.setPrimaryStage(primaryStage);
