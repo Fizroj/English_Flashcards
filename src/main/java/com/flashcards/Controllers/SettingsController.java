@@ -2,7 +2,6 @@ package com.flashcards.Controllers;
 
 import com.flashcards.App.Application;
 import com.flashcards.Language_and_Properties.LanguageManager;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,18 +11,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class FlashcardsSettingsController {
+public class SettingsController {
 
     private Stage primaryStage;
-
-    @FXML
-    private Button addNewFlashcardButton;
-
-    @FXML
-    private Button editFlashcardButton;
-
-    @FXML
-    private Button deleteFlashcardButton;
 
     @FXML
     private Button leaveSettingsButton;
@@ -36,23 +26,7 @@ public class FlashcardsSettingsController {
 
     }
 
-    @FXML
-    public void onAddNewFlashcardButton(ActionEvent event) {
-
-    }
-
-    @FXML
-    public void onEditFlashcardButton(ActionEvent event) {
-
-    }
-
-    @FXML
-    public void onDeleteFlashcardButton(ActionEvent event) {
-
-    }
-
-    @FXML
-    public void onLeaveSettingsButton(ActionEvent event) throws IOException {
+    public void onLeaveSettingsButton() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/main-view.fxml"));
         Parent root = fxmlLoader.load();
         MainController mainController = fxmlLoader.getController();

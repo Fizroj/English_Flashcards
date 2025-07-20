@@ -71,32 +71,48 @@ public class MainController {
     public void onPracticeButton(ActionEvent event) throws IOException {
         // TODO: Query from database randomly from a given category
 
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("FXML/Flashcard_Settings_View/flashcard-settings-view.fxml"));
+    }
+
+    @FXML
+    public void onFlashcardSettingsButton(ActionEvent event) throws IOException{
+        // TODO: Add, edit (avaible in future), delete flashcards in
+        //  a given , currently chosen category
+
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/Flashcards_Settings_View/flashcards-settings-view.fxml"));
         Parent root = fxmlLoader.load();
         FlashcardsSettingsController controller = fxmlLoader.getController();
         controller.setPrimaryStage(mainStage);
-        controller.setMainController(this);
         mainStage.setTitle(LanguageManager.getBundle().getString("flashcardsSettingsTitle"));
         mainStage.setScene(new Scene(root));
         mainStage.show();
     }
 
     @FXML
-    public void onFlashcardSettingsButton(ActionEvent event) {
-        // TODO: Add, edit (avaible in future), delete flashcards in
-        //  a given , currently chosen category
-    }
-
-    @FXML
-    public void onCategorySettingsButton(ActionEvent event) {
+    public void onCategorySettingsButton(ActionEvent event) throws IOException {
         // TODO: Add, edit (avaible in future), delete categories
         //  (there must be at least one category avaible)
+
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/Category_Settings_View/category-settings-view.fxml"));
+        Parent root = fxmlLoader.load();
+        CategorySettingsController controller = fxmlLoader.getController();
+        controller.setPrimaryStage(mainStage);
+        mainStage.setTitle(LanguageManager.getBundle().getString("flashcardsSettingsTitle"));
+        mainStage.setScene(new Scene(root));
+        mainStage.show();
     }
 
     @FXML
-    public void onSettingsButton(ActionEvent event) {
+    public void onSettingsButton(ActionEvent event) throws IOException{
         // TODO: Language, font-size, some other options type-shit
         //  (oh, explicit vocabulary mb)
+
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/settings-view.fxml"));
+        Parent root = fxmlLoader.load();
+        SettingsController controller = fxmlLoader.getController();
+        controller.setPrimaryStage(mainStage);
+        mainStage.setTitle(LanguageManager.getBundle().getString("flashcardsSettingsTitle"));
+        mainStage.setScene(new Scene(root));
+        mainStage.show();
     }
 
     @FXML

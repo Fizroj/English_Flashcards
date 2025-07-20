@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.flashcards.Controllers.CategorySettingsController">
+    <top>
+        <VBox alignment="CENTER" prefHeight="131.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label fx:id="flashcardsSettingsLabel" text="Category Settings">
+                    <font>
+                        <Font name="System Bold" size="20.0" />
+                    </font>
+                </Label>
+            </children></VBox>
+    </top>
+    <center>
+        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="12.0" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="addNewCategoryButton" mnemonicParsing="false" onAction="#onAddNewCategoryButton" text="Add New Category" />
+                <Button fx:id="editCategoryButton" mnemonicParsing="false" onAction="#onEditCategoryButton" text="Edit Category" />
+                <Button fx:id="deleteCategoryButton" mnemonicParsing="false" onAction="#onDeleteCategoryButton" text="Delete Category" />
+                <Button fx:id="leaveSettingsButton" mnemonicParsing="false" onAction="#onLeaveSettingsButton" text="Leave Settings" />
+            </children></VBox>
+    </center>
+</BorderPane>
