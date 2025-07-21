@@ -50,6 +50,15 @@ public class MainController {
     @FXML
     private Button exitButton;
 
+    public static void backToMain(Stage primaryStage) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/main-view.fxml"));
+        Parent root = fxmlLoader.load();
+        MainController mainController = fxmlLoader.getController();
+        mainController.setPrimaryStage(primaryStage);
+        primaryStage.setTitle(LanguageManager.getBundle().getString("flashcardsSettingsTitle"));
+        primaryStage.setScene(new Scene(root));
+        primaryStage.show();
+    }
     public void setPrimaryStage(Stage mainStage) {
         this.mainStage = mainStage;
     }

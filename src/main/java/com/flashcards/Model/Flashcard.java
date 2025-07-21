@@ -63,4 +63,5 @@ public class Flashcard {
     public void addTranslation(String translation){
         this.translations.add(translation);
     }
+    public void deleteTranslation(String translation){ this.translations.remove(translation); }
 }

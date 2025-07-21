@@ -21,6 +21,8 @@
                 <Button fx:id="addNewCategoryButton" mnemonicParsing="false" onAction="#onAddNewCategoryButton" text="Add New Category" />
                 <Button fx:id="editCategoryButton" mnemonicParsing="false" onAction="#onEditCategoryButton" text="Edit Category" />
                 <Button fx:id="deleteCategoryButton" mnemonicParsing="false" onAction="#onDeleteCategoryButton" text="Delete Category" />
+            <Button fx:id="addFlashcardToCategoryButton" mnemonicParsing="false" onAction="#onAddFlashcardToCategoryButton" text="Add Flashcard to Category" />
+            <Button fx:id="deleteFlashcardFromCategoryButton" layoutX="232.0" layoutY="169.0" mnemonicParsing="false" onAction="#onDeleteFlashcardFromCategoryButton" text="Delete Flashcard from Category" />
                 <Button fx:id="leaveSettingsButton" mnemonicParsing="false" onAction="#onLeaveSettingsButton" text="Leave Settings" />
             </children></VBox>
     </center>

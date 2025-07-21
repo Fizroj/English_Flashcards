@@ -28,6 +28,16 @@ public class FlashcardsSettingsController {
     @FXML
     private Button leaveSettingsButton;
 
+    public static void backToFlashcardsSettings(Stage primaryStage) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/Flashcards_Settings_View/flashcards-settings-view.fxml"));
+        Parent root = fxmlLoader.load();
+        FlashcardsSettingsController controller = fxmlLoader.getController();
+        controller.setPrimaryStage(primaryStage);
+        primaryStage.setTitle(LanguageManager.getBundle().getString("flashcardsSettingsTitle"));
+        primaryStage.setScene(new Scene(root));
+        primaryStage.show();
+    }
+
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
@@ -37,8 +47,14 @@ public class FlashcardsSettingsController {
     }
 
     @FXML
-    public void onAddNewFlashcardButton(ActionEvent event) {
-
+    public void onAddNewFlashcardButton(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/Flashcards_Settings_View/add-new-flashcard-view.fxml"));
+        Parent root = fxmlLoader.load();
+        AddNewFlashcardController controller = fxmlLoader.getController();
+        controller.setPrimaryStage(primaryStage);
+        primaryStage.setTitle(LanguageManager.getBundle().getString("flashcardsSettingsTitle"));
+        primaryStage.setScene(new Scene(root));
+        primaryStage.show();
     }
 
     @FXML
@@ -53,12 +69,6 @@ public class FlashcardsSettingsController {
 
     @FXML
     public void onLeaveSettingsButton(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/main-view.fxml"));
-        Parent root = fxmlLoader.load();
-        MainController mainController = fxmlLoader.getController();
-        mainController.setPrimaryStage(primaryStage);
-        primaryStage.setTitle(LanguageManager.getBundle().getString("flashcardsSettingsTitle"));
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+        MainController.backToMain(primaryStage);
     }
 }

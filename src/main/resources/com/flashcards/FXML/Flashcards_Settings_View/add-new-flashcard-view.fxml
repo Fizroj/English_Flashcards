@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.flashcards.Controllers.AddNewFlashcardController">
+   <content>
+      <BorderPane prefHeight="400.0" prefWidth="600.0">
+         <top>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label text="Add New Flashcard">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+         </top>
+         <center>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="12.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label text="Phrase" />
+                  <HBox alignment="CENTER" VBox.vgrow="NEVER">
+                     <children>
+                        <TextField fx:id="phraseTextField" onAction="#onPhraseTextField" />
+                     </children>
+                  </HBox>
+                  <Label text="Translatons" />
+                  <Button fx:id="addAnotherTranslationButton" mnemonicParsing="false" onAction="#onAddAnotherTranslationButton" text="Add Another Translation" />
+                  <VBox fx:id="translationsVBox">
+                     <children>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <TextField fx:id="firstTranslationTextField" onAction="#onFirstTranslationTextField" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <HBox alignment="CENTER" spacing="35.0">
+                     <children>
+                        <Button fx:id="leaveWithoutSavingButton" mnemonicParsing="false" onAction="#onLeaveWithoutSavingButton" text="Leave Without Saving" />
+                        <Button fx:id="saveAndLeaveButton" mnemonicParsing="false" onAction="#onSaveAndLeaveButton" text="Save &amp; Leave" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </center>
+      </BorderPane>
+   </content>
+</ScrollPane>

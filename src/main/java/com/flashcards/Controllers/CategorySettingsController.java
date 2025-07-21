@@ -26,6 +26,12 @@ public class CategorySettingsController {
     private Button deleteCategoryButton;
 
     @FXML
+    private Button addFlashcardToCategoryButton;
+
+    @FXML
+    private Button deleteFlashcardFromCategoryButton;
+
+    @FXML
     private Button leaveSettingsButton;
 
     public void setPrimaryStage(Stage primaryStage) {
@@ -52,13 +58,17 @@ public class CategorySettingsController {
     }
 
     @FXML
+    public void onAddFlashcardToCategoryButton(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void onDeleteFlashcardFromCategoryButton(ActionEvent event) {
+
+    }
+
+    @FXML
     private void onLeaveSettingsButton(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/main-view.fxml"));
-        Parent root = fxmlLoader.load();
-        MainController mainController = fxmlLoader.getController();
-        mainController.setPrimaryStage(primaryStage);
-        primaryStage.setTitle(LanguageManager.getBundle().getString("flashcardsSettingsTitle"));
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+        MainController.backToMain(primaryStage);
     }
 }
