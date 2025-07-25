@@ -22,6 +22,9 @@ public class Flashcard {
         this.translations = new ArrayList<>();
         this.categories = new ArrayList<>();
     }
+    public Flashcard(String phrase) {
+        this.phrase = phrase;
+    }
 
     // Getters and Setters
     public String getPhrase() {

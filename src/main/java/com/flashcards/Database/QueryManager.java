@@ -1,8 +1,10 @@
 package com.flashcards.Database;
 
+import com.flashcards.Language_and_Properties.PropertiesManager;
 import com.flashcards.Model.Category;
 import com.flashcards.Model.Flashcard;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -134,6 +136,25 @@ public class QueryManager extends DatabaseManager {
         }
 
         return flashcard;
+    }
+
+    public static ArrayList<Flashcard> query10FlashcardsPagination(int n){
+        ArrayList<Flashcard> outFlashcards = new ArrayList<>();
+        try(
+                Connection conn = DriverManager.getConnection(master_url);
+                PreparedStatement count10Stmt = conn.prepareStatement("SELECT * FROM flashcard_category WHERE category_id=? LIMIT 10 OFFSET ?");
+                ){
+            Category currentCategoryName=QueryManager.queryCategory(PropertiesManager.getConfigProperty("currentCategory"));
+            count10Stmt.setInt(1, currentCategoryName.getId());
+            count10Stmt.setInt(2, n);
+            ResultSet count10RS = count10Stmt.executeQuery();
+            while(count10RS.next()){
+                outFlashcards.add(querySingleFlashcard(count10RS.getInt("flashcard_id")));
+            }
+        } catch (SQLException e){
+            System.err.println(e.getMessage());
+        }
+        return outFlashcards;
     }
 
     public static Category queryCategory(int id) throws IllegalArgumentException {

@@ -63,8 +63,14 @@ public class FlashcardsSettingsController {
     }
 
     @FXML
-    public void onDeleteFlashcardButton(ActionEvent event) {
-
+    public void onDeleteFlashcardButton(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/Flashcards_Settings_View/delete-flashcard-view.fxml"));
+        Parent root = fxmlLoader.load();
+        DeleteFlashcardController controller = fxmlLoader.getController();
+        controller.setPrimaryStage(primaryStage);
+        primaryStage.setTitle(LanguageManager.getBundle().getString("flashcardsSettingsTitle"));
+        primaryStage.setScene(new Scene(root));
+        primaryStage.show();
     }
 
     @FXML

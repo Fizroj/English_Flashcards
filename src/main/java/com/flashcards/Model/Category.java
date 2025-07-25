@@ -26,6 +26,11 @@ public class Category {
     public Category() {
         this.flashcards = new ArrayList<>();
     }
+    public Category(String name, Integer id) {
+        this.flashcards = new ArrayList<>();
+        this.name = name;
+        this.id = id;
+    }
 
     // Getters and Setters
     public ArrayList<Flashcard> getFlashcards() {
