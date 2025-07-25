@@ -30,6 +30,14 @@ public class Flashcard {
     public ArrayList<String> getTranslations() {
         return translations;
     }
+    public String getTranslationsString(){
+        String outString = "";
+        for(int i=0; i<translations.size()-1; i++){
+            outString = outString + translations.get(i) + ", ";
+        }
+        outString = outString + translations.get(translations.size());
+        return outString;
+    }
     public Integer getId() {
         return id;
     }

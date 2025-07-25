@@ -15,14 +15,15 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Locale;
 
 // Main Controller of the JavaFX project. The main page of the frontend and all submodes in general are administered by
 // this very controller
 public class MainController {
 
-    private Flashcard mainFlashcard;
+    //private Flashcard mainFlashcard;
 
-    private Category mainCategory;
+    private Category currentCategory;
 
     private Stage mainStage;
 
@@ -63,6 +64,7 @@ public class MainController {
         this.mainStage = mainStage;
     }
     public void initialize(){
+        LanguageManager.readLanguage();
         // it's for setting language of UI
         welcomeTitle.setText(LanguageManager.getBundle().getString("welcomeTitle"));
         categoryLabel.setText(LanguageManager.getBundle().getString("categoryLabel"));

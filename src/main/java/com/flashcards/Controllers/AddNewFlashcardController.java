@@ -2,14 +2,14 @@ package com.flashcards.Controllers;
 
 import com.flashcards.App.Application;
 import com.flashcards.Database.InsertManager;
+import com.flashcards.Database.QueryManager;
 import com.flashcards.Language_and_Properties.LanguageManager;
+import com.flashcards.Language_and_Properties.PropertiesManager;
+import com.flashcards.Model.Category;
 import com.flashcards.Model.Flashcard;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -82,6 +82,9 @@ public class AddNewFlashcardController {
     @FXML
     public void onSaveAndLeaveButton(ActionEvent event) throws IOException {
         InsertManager.addSingleFlashcard(newFlashcard);
+        String currentCategory = PropertiesManager.getConfigProperty("currentCategory");
+        Category category = QueryManager.queryCategory(currentCategory);
+        InsertManager.addFlashcardToCategory(newFlashcard, category);
 
         FlashcardsSettingsController.backToFlashcardsSettings(primaryStage);
     }

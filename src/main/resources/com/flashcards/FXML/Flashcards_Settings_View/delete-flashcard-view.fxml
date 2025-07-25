@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.flashcards.Controllers.DeleteFlashcardController">
+   <top>
+      <VBox alignment="CENTER" prefHeight="62.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Delete Flashcard">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font></Label>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <TableView fx:id="flashcardsTable" prefHeight="235.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="phraseColumn" prefWidth="172.0" text="Phrase" />
+          <TableColumn fx:id="translationsColumn" prefWidth="349.0" text="Translations" />
+            <TableColumn fx:id="deleteColumn" prefWidth="75.0" />
+        </columns>
+      </TableView>
+   </center>
+   <bottom>
+      <VBox prefHeight="45.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <ButtonBar prefHeight="40.0" prefWidth="200.0">
+              <buttons>
+                <Button mnemonicParsing="false" text="Button" />
+              </buttons>
+            </ButtonBar>
+         </children>
+      </VBox>
+   </bottom>
+</BorderPane>
