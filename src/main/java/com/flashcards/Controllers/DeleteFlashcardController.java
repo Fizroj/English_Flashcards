@@ -9,11 +9,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
@@ -23,6 +25,8 @@ import java.util.ArrayList;
 public class DeleteFlashcardController {
 
     private Stage primaryStage;
+
+    private int pageNumber = 0;
 
     private ObservableList<Flashcard> flashcardList = FXCollections.observableArrayList();
 
@@ -50,7 +54,7 @@ public class DeleteFlashcardController {
         translationsColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getTranslations()));
 
         deleteColumn.setCellFactory(column -> new TableCell<>() {
-            private final Button removeButton = new Button("Delete Flashcard");
+            private final Button removeButton = new Button("Delete");
             {
                 removeButton.setOnAction(event -> {
                     Flashcard flashcard = getTableView().getItems().get(getIndex());
@@ -67,7 +71,9 @@ public class DeleteFlashcardController {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    setGraphic(removeButton);
+                    HBox hbox = new HBox(removeButton);
+                    hbox.setAlignment(Pos.CENTER);
+                    setGraphic(hbox);
                 }
             }
         });
@@ -75,8 +81,29 @@ public class DeleteFlashcardController {
         flashcardList.addAll(QueryManager.query10FlashcardsPagination(0));
         flashcardsTable.setItems(flashcardList);
     }
+
+    @FXML
+    public void onPreviousPageButton(ActionEvent event) {
+        if(pageNumber>0){
+            pageNumber--;
+            flashcardList.setAll(QueryManager.query10FlashcardsPagination(pageNumber));
+            flashcardsTable.setItems(flashcardList);
+        }
+    }
+
+    @FXML
+    public void onNextPageButton(ActionEvent event) {
+        if((pageNumber+1)<MainController.getNumberOfFlashcardsOfCurrentCategory()){
+            pageNumber++;
+            flashcardList.setAll(QueryManager.query10FlashcardsPagination(pageNumber));
+            flashcardsTable.setItems(flashcardList);
+        }
+    }
+
     @FXML
     public void onLeaveButton(ActionEvent event) throws IOException {
+        MainController.setNumberOfFlashcards(QueryManager.countAllFlashcards());
+
         FlashcardsSettingsController.backToFlashcardsSettings(primaryStage);
     }
 }

@@ -157,6 +157,44 @@ public class QueryManager extends DatabaseManager {
         return outFlashcards;
     }
 
+    public static int countAllFlashcards(){
+        int numberOfFlashcards=0;
+
+        try(
+            Connection conn = DriverManager.getConnection(master_url);
+            PreparedStatement countStmt = conn.prepareStatement("SELECT COUNT(*) FROM phrases");
+                ){
+            ResultSet countRS = countStmt.executeQuery();
+            if(countRS.next()){
+                numberOfFlashcards = countRS.getInt(1);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return numberOfFlashcards;
+    }
+
+    public static int countAllFlashcardsOfCurrentCategory(){
+        int numberOfFlashcards=0;
+
+        try(
+                Connection conn = DriverManager.getConnection(master_url);
+                PreparedStatement countStmt = conn.prepareStatement("SELECT COUNT(*) FROM flashcard_category WHERE category_id=?");
+        ){
+            Category currentCategoryName=QueryManager.queryCategory(PropertiesManager.getConfigProperty("currentCategory"));
+            countStmt.setInt(1, currentCategoryName.getId());
+            ResultSet countRS = countStmt.executeQuery();
+            if(countRS.next()){
+                numberOfFlashcards = countRS.getInt(1);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return numberOfFlashcards;
+    }
+
     public static Category queryCategory(int id) throws IllegalArgumentException {
 
         // self-explanatory, just selects the category from the database by id

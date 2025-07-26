@@ -85,6 +85,7 @@ public class AddNewFlashcardController {
         String currentCategory = PropertiesManager.getConfigProperty("currentCategory");
         Category category = QueryManager.queryCategory(currentCategory);
         InsertManager.addFlashcardToCategory(newFlashcard, category);
+        MainController.setNumberOfFlashcards(QueryManager.countAllFlashcards());
 
         FlashcardsSettingsController.backToFlashcardsSettings(primaryStage);
     }

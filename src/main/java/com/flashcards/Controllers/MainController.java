@@ -27,6 +27,26 @@ public class MainController {
 
     private Stage mainStage;
 
+    private static int numberOfFlashcards;
+
+    private static int numberOfFlashcardsOfCurrentCategory;
+
+    public static int getNumberOfFlashcards(){
+        return numberOfFlashcards;
+    }
+
+    public static void setNumberOfFlashcards(int numberOfFlashcards_){
+        numberOfFlashcards = numberOfFlashcards_;
+    }
+
+    public static int getNumberOfFlashcardsOfCurrentCategory(){
+        return numberOfFlashcardsOfCurrentCategory;
+    }
+
+    public static void setNumberOfFlashcardsOfCurrentCategory(int numberOfFlashcards_){
+        numberOfFlashcardsOfCurrentCategory = numberOfFlashcards_;
+    }
+
     @FXML
     private Label welcomeTitle;
 
@@ -75,6 +95,7 @@ public class MainController {
         categorySettingsButton.setText(LanguageManager.getBundle().getString("categorySettingsButton"));
         settingsButton.setText(LanguageManager.getBundle().getString("settingsButton"));
         exitButton.setText(LanguageManager.getBundle().getString("exitButton"));
+        numberOfFlashcards = QueryManager.countAllFlashcards();
     }
 
     // TODO: Fill in the methods here
