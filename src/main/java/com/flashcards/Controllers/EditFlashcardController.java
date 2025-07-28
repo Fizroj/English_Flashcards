@@ -3,8 +3,9 @@ package com.flashcards.Controllers;
 import com.flashcards.Database.DeleteManager;
 import com.flashcards.Database.QueryManager;
 import com.flashcards.Language_and_Properties.PropertiesManager;
-import com.flashcards.Model.*;
-import javafx.beans.binding.ObjectExpression;
+import com.flashcards.Model.Category;
+import com.flashcards.Model.Flashcard;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,16 +15,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class DeleteFlashcardController {
-
+public class EditFlashcardController {
     private Stage primaryStage;
 
     private int pageNumber = 0;
@@ -54,12 +52,14 @@ public class DeleteFlashcardController {
         translationsColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getTranslations()));
 
         deleteColumn.setCellFactory(column -> new TableCell<>() {
-            private final Button removeButton = new Button("Delete");
+            private final Button removeButton = new Button("Edit");
             {
                 removeButton.setOnAction(event -> {
                     Flashcard flashcard = getTableView().getItems().get(getIndex());
                     String categoryName = PropertiesManager.getConfigProperty("currentCategory");
                     Category category = new Category(categoryName, QueryManager.queryCategory(categoryName).getId());
+
+                    // TODO: FINALLY make editing flashcards avaible one freakin' DAY
                     DeleteManager.deleteFlashcardFromCategory(flashcard, category);
                     DeleteManager.deleteSingleFlashcard(flashcard);
                     flashcardList.remove(flashcard);
@@ -103,8 +103,7 @@ public class DeleteFlashcardController {
     @FXML
     public void onLeaveButton(ActionEvent event) throws IOException {
         MainController.setNumberOfFlashcards(QueryManager.countAllFlashcards());
-        MainController.setNumberOfFlashcardsOfCurrentCategory(QueryManager.countAllFlashcardsOfCurrentCategory());
 
-        CategorySettingsController.backToCategorySettings(primaryStage);
+        FlashcardsSettingsController.backToFlashcardsSettings(primaryStage);
     }
 }

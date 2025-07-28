@@ -34,6 +34,17 @@ public class CategorySettingsController {
     @FXML
     private Button leaveSettingsButton;
 
+    public static void backToCategorySettings(Stage primaryStage) throws IOException {
+        // TODO: Fix the titles of each scene to be derived from ResourceBundle
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/Category_Settings_View/category-settings-view.fxml"));
+        Parent root = fxmlLoader.load();
+        CategorySettingsController controller = fxmlLoader.getController();
+        controller.setPrimaryStage(primaryStage);
+        primaryStage.setTitle(LanguageManager.getBundle().getString("flashcardsSettingsTitle"));
+        primaryStage.setScene(new Scene(root));
+        primaryStage.show();
+    }
+
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
@@ -43,8 +54,14 @@ public class CategorySettingsController {
     }
 
     @FXML
-    private void onAddNewCategoryButton(ActionEvent event) {
-
+    private void onAddNewCategoryButton(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/Category_Settings_View/add-new-category-view.fxml"));
+        Parent root = fxmlLoader.load();
+        AddNewCategoryController controller = fxmlLoader.getController();
+        controller.setPrimaryStage(primaryStage);
+        primaryStage.setTitle(LanguageManager.getBundle().getString("flashcardsSettingsTitle"));
+        primaryStage.setScene(new Scene(root));
+        primaryStage.show();
     }
 
     @FXML
@@ -53,8 +70,14 @@ public class CategorySettingsController {
     }
 
     @FXML
-    private void onDeleteCategoryButton(ActionEvent event) {
-
+    private void onDeleteCategoryButton(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/com/flashcards/FXML/Category_Settings_View/delete-category-view.fxml"));
+        Parent root = fxmlLoader.load();
+        DeleteCategoryController controller = fxmlLoader.getController();
+        controller.setPrimaryStage(primaryStage);
+        primaryStage.setTitle(LanguageManager.getBundle().getString("flashcardsSettingsTitle"));
+        primaryStage.setScene(new Scene(root));
+        primaryStage.show();
     }
 
     @FXML

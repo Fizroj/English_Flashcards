@@ -31,6 +31,8 @@ public class MainController {
 
     private static int numberOfFlashcardsOfCurrentCategory;
 
+    private static int numberOfCategories;
+
     public static int getNumberOfFlashcards(){
         return numberOfFlashcards;
     }
@@ -45,6 +47,14 @@ public class MainController {
 
     public static void setNumberOfFlashcardsOfCurrentCategory(int numberOfFlashcards_){
         numberOfFlashcardsOfCurrentCategory = numberOfFlashcards_;
+    }
+
+    public static int getNumberOfCategories(){
+        return numberOfCategories;
+    }
+
+    public static void setNumberOfCategories(int numberOfCategories_){
+        numberOfCategories = numberOfCategories_;
     }
 
     @FXML

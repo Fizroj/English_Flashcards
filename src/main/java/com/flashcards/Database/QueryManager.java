@@ -195,6 +195,42 @@ public class QueryManager extends DatabaseManager {
         return numberOfFlashcards;
     }
 
+    public static int countAllCategories(){
+        int numberOfCategories=0;
+
+        try(
+                Connection conn = DriverManager.getConnection(master_url);
+                PreparedStatement countStmt = conn.prepareStatement("SELECT COUNT(*) FROM categories");
+                ){
+            ResultSet countRS = countStmt.executeQuery();
+            if(countRS.next()){
+                numberOfCategories = countRS.getInt(1);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return numberOfCategories;
+    }
+
+    public static ArrayList<Category> query10CategoriesPagination(int n){
+        ArrayList<Category> outCategories = new ArrayList<>();
+        try(
+                Connection conn = DriverManager.getConnection(master_url);
+                PreparedStatement count10Stmt = conn.prepareStatement("SELECT * FROM categories LIMIT 10 OFFSET ?");
+        ){
+            Category currentCategoryName=QueryManager.queryCategory(PropertiesManager.getConfigProperty("currentCategory"));
+            count10Stmt.setInt(1, n);
+            ResultSet count10RS = count10Stmt.executeQuery();
+            while(count10RS.next()){
+                outCategories.add(queryCategory(count10RS.getInt("id")));
+            }
+        } catch (SQLException e){
+            System.err.println(e.getMessage());
+        }
+        return outCategories;
+    }
+
     public static Category queryCategory(int id) throws IllegalArgumentException {
 
         // self-explanatory, just selects the category from the database by id
